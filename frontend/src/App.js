@@ -7,6 +7,7 @@ import RegisterPage from './components/views/RegisterPage/RegisterPage';
 import LandingPage from './components/views/LandingPage/LandingPage';
 import Auth1 from './hoc/Auth1';
 import DashBoardPage from './components/views/DashBoardPage/DashBoardPage';
+import Boardpage from './components/views/Board/Boardpage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/login" element={Auth1(LoginPage)} />
       <Route path="/register" element={Auth1(RegisterPage)} />
       <Route path="/dashboard" element={Auth1(DashBoardPage,true)} />
+      <Route path="/board" element={Auth1(Boardpage,false)} />
     </Routes>
     </div>
   </Router>

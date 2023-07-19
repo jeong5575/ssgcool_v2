@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import pymysql
 
 app = Flask(__name__)
+CORS(app)
 
 # MariaDB 설정
 app.config['HOST'] = '15.164.153.191'  # 데이터베이스 호스트

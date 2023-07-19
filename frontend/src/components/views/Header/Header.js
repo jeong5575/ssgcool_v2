@@ -78,7 +78,7 @@ useEffect(() => {
             </a>
             <CustomButton type="link">질문 게시판</CustomButton>
             <CustomButton type="link">자유 게시판</CustomButton>
-            <CustomButton type="link">공지 사항</CustomButton>
+            <CustomButton type="link"><a href="/board">공지 사항</a></CustomButton>
             {isLoggedIn ? (
               <Button onClick={onClickHandlerLogout} type="link" icon={<UserOutlined />} />
             ) : (
