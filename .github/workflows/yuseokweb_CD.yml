@@ -1,0 +1,62 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+env:
+  Tag: 1.0.9
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ADMIN_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_ADMIN_SECRET_ACCESS_KEY}}
+          aws-region: ${{ secrets.AWS_ADMIN_REGION}}
+
+
+      - name: Install and configure AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update
+          aws configure set default.region ${{ secrets.AWS_ADMIN_REGION}}
+          
+      - name: Build and tag and push images to Docker Hub
+        run: |
+          docker login --username jeong5575 --password ${{ secrets.DOCKER_PASSWORD }}
+          docker compose build
+          docker tag boiler-plate-frontend jeong5575/boiler-plate-frontend:${{env.Tag}}
+          docker tag boiler-plate-backend jeong5575/boiler-plate-backend:${{env.Tag}}
+          docker tag boiler-plate-nginx jeong5575/boiler-plate-nginx:${{env.Tag}}
+          docker push jeong5575/boiler-plate-frontend:${{env.Tag}}
+          docker push jeong5575/boiler-plate-backend:${{env.Tag}}
+          docker push jeong5575/boiler-plate-nginx:${{env.Tag}}
+
+      - name: SSH into EC2 instance and run commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: 15.165.77.169
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker stop $(docker ps -aq)
+            docker rm $(docker ps -aq)
+            docker rmi $(docker images -q)
+            docker network create yuseok-web
+            docker pull jeong5575/boiler-plate-frontend:${{env.Tag}}
+            docker pull jeong5575/boiler-plate-backend:${{env.Tag}}
+            docker pull jeong5575/boiler-plate-nginx:${{env.Tag}}
+            docker run -d --name nginx -p 2000:80 --restart always --network yuseok-web jeong5575/boiler-plate-nginx:${{env.Tag}}
+            docker run -d --name frontend --network yuseok-web jeong5575/boiler-plate-frontend:${{env.Tag}}
+            docker run -d -e DATABASE_URL=${{secrets.MOGODB_URI}} --name backend --network yuseok-web jeong5575/boiler-plate-backend:${{env.Tag}}
+      
+      
+      

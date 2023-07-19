@@ -1,0 +1,11 @@
+# 단계 1: Node.js 빌드 단계
+FROM node:alpine as build-stage
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+CMD npm run start
