@@ -1,1 +1,1 @@
-재사용 가능한 Boiler plate 만들기!!
+Boiler plate 활용해 SSGCOOL v2만들기
