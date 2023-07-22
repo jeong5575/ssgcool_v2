@@ -4,7 +4,6 @@ import { Pagination, Input, Button } from 'antd';
 import styled from 'styled-components';
 import Layout from '../../../hoc/Layout';
 
-
 const PostContent = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;

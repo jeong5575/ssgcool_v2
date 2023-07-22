@@ -1,7 +1,7 @@
 import React, {  useMemo,useState,useRef  } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Typography, Button, Form, message } from 'antd';
+import { Typography, Button, Form, message, Input } from 'antd';
 import axios from 'axios';
 // Import the required language packs
 import { styled } from 'styled-components';
@@ -28,7 +28,7 @@ const PostBoardPage = (props) => {
   const user = useSelector((state) => state.user.register);
   console.log(user)
   const [content, setContent] = useState('');
-
+  const [title, setTitle] = useState('');
   // Define the quillRef using the useRef hook
   const QuillRef = useRef(null);
 
@@ -84,10 +84,12 @@ const PostBoardPage = (props) => {
     const variables = {
       content: content,
       userID: user._id,
+      title: title,
+      email: user.email
     };
-
+    console.log(variables)
     axios
-      .post('/api/blog/createPost', variables)
+      .post('/flask/createPosts', variables)
       .then((response) => {
         if (response.data.success) {
           message.success('Post Created!');
@@ -129,9 +131,18 @@ const PostBoardPage = (props) => {
 
   return (
     <Container>
+       <Form onFinish={onSubmit}>
+        
       <div style={{ textAlign: 'center' }}>
         <Title level={2}>Editor</Title>
       </div>
+      <Form.Item>
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="제목을 입력해주세요."
+          />
+        </Form.Item>
       <ReactQuill
                ref={(element) => {
                   if (element !== null) {
@@ -145,7 +156,7 @@ const PostBoardPage = (props) => {
                 placeholder="내용을 입력해주세요."
               />
 
-      <Form onFinish={onSubmit}>
+     
         <div style={{ textAlign: 'center', margin: '2rem' }}>
           <Button size="large" htmlType="submit">
             Submit

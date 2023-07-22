@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pymysql
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -29,19 +30,20 @@ def get_posts():
     return jsonify(posts)
 
 # 게시글 작성
-@app.route('/flask/posts', methods=['POST'])
+@app.route('/flask/createPosts', methods=['POST'])
 def create_post():
     data = request.get_json()
     title = data['title']
     content = data['content']
     email = data['email']
-
+    board_type = "free"
+    time = datetime.now()
     with mysql.cursor() as cursor:
-        cursor.execute("INSERT INTO board (board_type, title, content, email) VALUES (%s, %s, %s, %s)",
-                       ('게시판 종류', title, content, email))
+        cursor.execute("INSERT INTO board (board_type, time, title, content, email) VALUES (%s,%s, %s, %s, %s)",
+                       (board_type, time, title, content, email))
         mysql.commit()
 
     return jsonify({'message': '게시글이 작성되었습니다.'})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4000)
+    app.run(debug=True, port=4000)
