@@ -8,7 +8,7 @@ import LandingPage from './components/views/LandingPage/LandingPage';
 import Auth1 from './hoc/Auth1';
 import DashBoardPage from './components/views/DashBoardPage/DashBoardPage';
 import Boardpage from './components/views/Board/Boardpage';
-
+import PostBoardPage from './components/views/Board/PostBoardPage';
 function App() {
   return (
     <Router>
@@ -19,6 +19,7 @@ function App() {
       <Route path="/register" element={Auth1(RegisterPage)} />
       <Route path="/dashboard" element={Auth1(DashBoardPage,true)} />
       <Route path="/board" element={Auth1(Boardpage,false)} />
+      <Route path="/postboard" element={Auth1(PostBoardPage,false)} />
     </Routes>
     </div>
   </Router>
