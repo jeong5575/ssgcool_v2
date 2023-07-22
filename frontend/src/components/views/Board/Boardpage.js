@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Pagination, Input, Button } from 'antd';
 import styled from 'styled-components';
 import Layout from '../../../hoc/Layout';
+import { Navigate, useNavigate} from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { selectPost } from '../../../_actions/post_action';
 
 const PostContent = styled.p`
   overflow: hidden;
@@ -37,43 +40,86 @@ const SearchButton = styled(Button)`
   margin-bottom: 10px;
   margin-left: 10px;
 `;
+const BoardMenu = styled.div`
+ display: flex;
+  flex-direction: vertical;
+  align-items: flex-start;
+  margin-bottom: 20px;
+`;
+const MenuItem = styled(Button)`
+   margin-bottom: 10px;
+  font-weight: ${({ selected }) => (selected ? 'bold' : 'normal')};
+  background-color: ${({ selected }) => (selected ? '#4CAF50' : 'white')};
+  color: ${({ selected }) => (selected ? 'white' : 'black')};
+  border: 2px solid ${({ selected }) => (selected ? '#4CAF50' : 'black')};
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
 
+  &:hover {
+    background-color: ${({ selected }) => (selected ? '#45A049' : '#f0f0f0')};
+    border-color: ${({ selected }) => (selected ? '#45A049' : '#a9a9a9')};
+  }
+`;
 
 const Boardpage = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(5); // 페이지 당 게시물 수
+  const [postsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchedPosts, setSearchedPosts] = useState([]);
+  const [boardType, setBoardType] = useState('QnA'); // 추가: boardType 상태
 
-  // 게시글 목록 가져오기
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  
+const removeImageTags = (htmlContent) => {
+  // Use a regular expression to remove image tags from the HTML content
+  const withoutImages = htmlContent.replace(/<img\b[^>]*>/gi, '');
+  return withoutImages;
+};
+
+
   useEffect(() => {
     fetchPosts();
   }, []);
 
   const handlePostClick = (postId) => {
-    // Navigate to the detailed post page using the postId
-    // Add your navigation logic here
+    //  포스트 아이디와 일치하는 포스트 찾기
+    const selectedPost = posts.find((post) => post.B_numb === postId);
+
+    if (selectedPost) {
+      // Navigate to the detailed post page with the selected post data
+      dispatch(selectPost(selectedPost));
+      navigate('/postdetail'); 
+    }
   };
+
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('/flask/posts');
-      setPosts(response.data);  setSearchedPosts(response.data);
+      const response = await axios.get('/flask/posts', {
+        params: {
+          boardtype: boardType,  // 선택한 boardtype을 요청 파라미터로 전달
+        },
+      });
+      setPosts(response.data);
+      setSearchedPosts(response.data);
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   // 현재 페이지에 해당하는 게시물 목록 가져오기
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = searchedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
-  // 페이지 변경
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // 게시물 검색
   const handleSearch = () => {
     const filteredPosts = posts.filter((post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -83,13 +129,45 @@ const Boardpage = () => {
   };
 
   const handleWritePost = () => {
-    // Handle write post logic
+    navigate('/postboard');
   };
+
+  const handleBoardTypeSelect =async (type) => {
+   
+      try {
+        setBoardType(type); // 상태 변경
+        console.log('clicked', type); // 수정: type 출력
+    
+        const response = await axios.get('/flask/posts', {
+          params: {
+            boardtype: type, // 선택한 boardtype을 요청 파라미터로 전달
+          },
+        });
+    
+        setPosts(response.data);
+        setSearchedPosts(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+ 
 
   return (
     <Layout>
       <BoardWrapper>
         <h1>게시판</h1>
+        <BoardMenu>
+          {/* 추가: boardtype에 따른 선택 메뉴 */}
+          <MenuItem selected={boardType === 'QnA'} onClick={() => handleBoardTypeSelect('QnA')}>
+            질문
+          </MenuItem>
+          <MenuItem selected={boardType === 'free'} onClick={() => handleBoardTypeSelect('free')}>
+            자유게시판
+          </MenuItem>
+          <MenuItem selected={boardType === 'Study'} onClick={() => handleBoardTypeSelect('Study')}>
+            스터디모집
+          </MenuItem>
+        </BoardMenu>
         <SearchBar
           placeholder="게시물 검색"
           value={searchTerm}
@@ -102,13 +180,15 @@ const Boardpage = () => {
           글쓰기
         </WriteButton>
         {currentPosts.map((post) => (
-        <PostItem key={post.B_numb} onClick={() => handlePostClick(post.B_numb)}>
-          <h3>{post.title}</h3>
-          <PostContent>{post.content}</PostContent>
-          <p>작성자: {post.email}</p>
-          <p>작성시간: {post.time}</p>
-        </PostItem>
-      ))}
+                   <PostItem key={post.B_numb} onClick={() => handlePostClick(post.B_numb)}>
+                   <h3>{post.title}</h3>
+                   {/*이미지 제거후 보여주기 */}
+                   <PostContent dangerouslySetInnerHTML={{ __html:removeImageTags(post.content) }}/>
+                   <p>작성자: {post.email}</p>
+                   <p>작성시간: {post.time}</p>
+                 </PostItem>
+       
+        ))}
         <Pagination
           current={currentPage}
           total={searchedPosts.length}

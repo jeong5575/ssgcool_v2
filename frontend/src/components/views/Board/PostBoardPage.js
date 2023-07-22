@@ -26,11 +26,18 @@ const Container = styled.div`
 
 const PostBoardPage = (props) => {
   const user = useSelector((state) => state.user.register);
-  console.log(user)
+
+  console.log(props)
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
+  const [boardType, setboardType] =  useState('');
   // Define the quillRef using the useRef hook
   const QuillRef = useRef(null);
+
+  
+  const handleButtonClick = (type) => {
+    setboardType(type);
+  };
 
   const imageHandler = async () => {
     
@@ -85,7 +92,8 @@ const PostBoardPage = (props) => {
       content: content,
       userID: user._id,
       title: title,
-      email: user.email
+      email: user.email,
+      boardType: boardType
     };
     console.log(variables)
     axios
@@ -131,16 +139,22 @@ const PostBoardPage = (props) => {
 
   return (
     <Container>
+      <div>
+        <Button onClick={() => handleButtonClick('free')}>자유게시판</Button>
+        <Button onClick={() => handleButtonClick('Study')}>스터디모집</Button>
+        <Button onClick={() => handleButtonClick('QnA')}>질문</Button>
+      </div>
        <Form onFinish={onSubmit}>
-        
+       
       <div style={{ textAlign: 'center' }}>
-        <Title level={2}>Editor</Title>
+        <Title level={2}>{boardType}</Title>
       </div>
       <Form.Item>
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력해주세요."
+            style={{ fontWeight: 'bold', fontSize: '18px' }}
           />
         </Form.Item>
       <ReactQuill
