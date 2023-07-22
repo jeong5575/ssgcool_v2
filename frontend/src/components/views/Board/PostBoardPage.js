@@ -8,10 +8,12 @@ import { styled } from 'styled-components';
 import { useSelector } from 'react-redux';
 import AWS from 'aws-sdk';
 
+const accessKeyId = process.env.REACT_APP_ACCESSS_KEY_ID;
+const secretAccessKey = process.env.REACT_APP_SECRET_ACCESS_KEY;
 
 AWS.config.update({
-  accessKeyId: 'YOUR_ACCESS_KEY',
-  secretAccessKey: 'YOUR_SECRET_KEY',
+  accessKeyId: accessKeyId,
+  secretAccessKey: secretAccessKey,
 });
 
 
@@ -24,19 +26,21 @@ const Container = styled.div`
 
 const PostBoardPage = (props) => {
   const user = useSelector((state) => state.user);
-
+  
   const [content, setContent] = useState('');
+
   // Define the quillRef using the useRef hook
-  const quillRef = useRef(null);
+  const QuillRef = useRef(null);
 
   const imageHandler = async () => {
+    
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
     input.click();
-  
+    console.log("이미지핸들러")
     input.addEventListener("change", async () => {
-      const editor = quillRef.current.getEditor();
+      const editor = QuillRef.current.getEditor();
       const file = input.files[0];
       const range = editor.getSelection(true);
   
@@ -45,7 +49,7 @@ const PostBoardPage = (props) => {
         const s3 = new AWS.S3();
   
         // Set your S3 bucket name
-        const bucketName = "your-s3-bucket-name";
+        const bucketName = "ssgcool";
   
         // Create a unique name for the image using the current timestamp
         const imageName = `image/${Date.now()}_${file.name}`;
@@ -60,17 +64,17 @@ const PostBoardPage = (props) => {
   
         // Generate the image URL
         const imageUrl = `https://${bucketName}.s3.amazonaws.com/${imageName}`;
-  
         // Insert the image URL into the editor
         editor.insertEmbed(range.index, "image", imageUrl);
         editor.setSelection(range.index + 1);
       } catch (error) {
-        console.log(error);
+       console.log(error)
       }
     });
   };
 
   const onEditorChange = (value) => {
+    const editor = QuillRef.current.getEditor();
     setContent(value);
     console.log(content);
   };
@@ -78,7 +82,7 @@ const PostBoardPage = (props) => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-
+    console.log("clicked");
     if (user.userData && !user.userData.isAuth) {
       return alert('Please Log in first');
     }
@@ -107,22 +111,27 @@ const PostBoardPage = (props) => {
         console.error(error);
       });
   };
-
-  const modules = useMemo(() => {
-    return {
+  const modules = useMemo(
+    () => ({
       toolbar: {
         container: [
-          [{ header: [1, 2, 3, false] }],
-          ["bold", "italic", "underline", "strike","blockquote","code-block"],
-          
-          [{ list: "ordered" }, { list: "bullet" }],
-          
-          [{ align: [] }, "link"],[{"image": imageHandler}],
+          ["bold", "italic", "underline", "strike", "blockquote","code-block"],
+          [{ size: ["small", false, "large", "huge"] }, { color: [] }],
+          [
+            { list: "ordered" },
+            { list: "bullet" },
+            { align: [] },
+            
+          ],
+          ["image"],
         ],
+        handlers: {
+          image: imageHandler,
+        },
       },
-    }
-  }, [])
-
+    }),
+    []
+  );
 
   const formats = [
     'header',
@@ -145,14 +154,17 @@ const PostBoardPage = (props) => {
         <Title level={2}>Editor</Title>
       </div>
       <ReactQuill
-        value={content}
-        onChange={onEditorChange}
-      
-        theme="snow"
-        modules={modules}
-        formats={formats}
-        placeholder="Write something..."
-      />
+               ref={(element) => {
+                  if (element !== null) {
+                    QuillRef.current = element;
+                  }
+                }}
+                value={content}
+                onChange={setContent}
+                modules={modules}
+                theme="snow"
+                placeholder="내용을 입력해주세요."
+              />
 
       <Form onSubmit={onSubmit}>
         <div style={{ textAlign: 'center', margin: '2rem' }}>
