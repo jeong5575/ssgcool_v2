@@ -73,16 +73,10 @@ const PostBoardPage = (props) => {
     });
   };
 
-  const onEditorChange = (value) => {
-    const editor = QuillRef.current.getEditor();
-    setContent(value);
-    console.log(content);
-  };
-
 
   const onSubmit = (event) => {
-    event.preventDefault();
     console.log("clicked");
+    console.log(content);
     if (user.userData && !user.userData.isAuth) {
       return alert('Please Log in first');
     }
@@ -133,21 +127,6 @@ const PostBoardPage = (props) => {
     []
   );
 
-  const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'link',
-    'image',
-    'video',
-    'code-block', // Enable the 'code-block' format
-  ];
-
   return (
     <Container>
       <div style={{ textAlign: 'center' }}>
@@ -166,7 +145,7 @@ const PostBoardPage = (props) => {
                 placeholder="내용을 입력해주세요."
               />
 
-      <Form onSubmit={onSubmit}>
+      <Form onFinish={onSubmit}>
         <div style={{ textAlign: 'center', margin: '2rem' }}>
           <Button size="large" htmlType="submit">
             Submit
