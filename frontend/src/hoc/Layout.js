@@ -49,7 +49,7 @@ const FooterDiv = styled.div`
 `;
 
 const ContainerDiv = styled.div`
-  width: 1000px;
+  width: 700px;
   margin-left: auto;
   margin-right: auto;
 `;

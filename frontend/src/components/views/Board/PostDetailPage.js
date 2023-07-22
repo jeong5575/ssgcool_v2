@@ -36,10 +36,10 @@ const PostDetailPage = ({ }) => {
      <div>
         <h2>댓글</h2>
         {comments.map((comment) => (
-          <CommentItem key={comment.commentId} comment={comment} />
+          <Comment key={comment.commentId} comment={comment} />
         ))}
       </div>
-      
+
     </Layout>
   );
 };
