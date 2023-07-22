@@ -4,14 +4,14 @@ import Layout from '../../../hoc/Layout'
 export default function LandingPage() {
   return (
     <Layout>
+    
     <div>LandingPage</div>
     <div>LandingPage</div>
     <div>LandingPage</div>
     <div>LandingPage</div>
+    <div>LandssingPage</div>
     <div>LandingPage</div>
-    <div>LandingPage</div>
-    <div>LandingPage</div>
-    <div>LandingPage</div>
+    <div>LandingPasge</div>
     <div>LandingPage</div>
     <div>LandingPage</div>
     <div>LandingPage</div>
