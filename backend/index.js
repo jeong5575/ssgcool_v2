@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = 4000;
+const port = 5000;
 const bodyParser = require('body-parser');
 const {User} = require('./models/User'); 
 const config = require('./config/key' );
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
    next();
  });
-
+ 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })

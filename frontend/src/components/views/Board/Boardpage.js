@@ -59,7 +59,7 @@ const Boardpage = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/posts');
+      const response = await axios.get('/flask/posts');
       setPosts(response.data);  setSearchedPosts(response.data);
     } catch (error) {
       console.error(error);

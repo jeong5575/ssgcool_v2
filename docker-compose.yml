@@ -4,11 +4,21 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile      
+    ports:
+        - "3000"
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    ports:
+        - "5000"
+  flask:
+    build:
+      context: ./flask_api
+      dockerfile: Dockerfile
+    ports:
+        - "4000"       
 
   nginx:
     restart: always

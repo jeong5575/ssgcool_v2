@@ -18,8 +18,8 @@ function App() {
       <Route path="/login" element={Auth1(LoginPage)} />
       <Route path="/register" element={Auth1(RegisterPage)} />
       <Route path="/dashboard" element={Auth1(DashBoardPage,true)} />
-      <Route path="/board" element={Auth1(Boardpage,false)} />
-      <Route path="/postboard" element={Auth1(PostBoardPage,false)} />
+      <Route path="/board" element={Auth1(Boardpage,true)} />
+      <Route path="/postboard" element={Auth1(PostBoardPage,true)} />
     </Routes>
     </div>
   </Router>

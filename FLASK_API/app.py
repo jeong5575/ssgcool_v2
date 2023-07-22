@@ -21,7 +21,7 @@ mysql = pymysql.connect(
 )
 
 # 게시글 목록 가져오기
-@app.route('/api/posts', methods=['GET'])
+@app.route('/flask/posts', methods=['GET'])
 def get_posts():
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM board")
@@ -29,7 +29,7 @@ def get_posts():
     return jsonify(posts)
 
 # 게시글 작성
-@app.route('/api/posts', methods=['POST'])
+@app.route('/flask/posts', methods=['POST'])
 def create_post():
     data = request.get_json()
     title = data['title']
@@ -44,4 +44,4 @@ def create_post():
     return jsonify({'message': '게시글이 작성되었습니다.'})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=4000)

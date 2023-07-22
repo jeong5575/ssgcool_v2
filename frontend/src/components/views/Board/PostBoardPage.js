@@ -25,8 +25,8 @@ const Container = styled.div`
 `;
 
 const PostBoardPage = (props) => {
-  const user = useSelector((state) => state.user);
-  
+  const user = useSelector((state) => state.user.register);
+  console.log(user)
   const [content, setContent] = useState('');
 
   // Define the quillRef using the useRef hook
@@ -77,13 +77,13 @@ const PostBoardPage = (props) => {
   const onSubmit = (event) => {
     console.log("clicked");
     console.log(content);
-    if (user.userData && !user.userData.isAuth) {
+    if (user && !user.isAuth) {
       return alert('Please Log in first');
     }
 
     const variables = {
       content: content,
-      userID: user.userData._id,
+      userID: user._id,
     };
 
     axios
