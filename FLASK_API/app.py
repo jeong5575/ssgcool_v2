@@ -53,5 +53,28 @@ def create_post():
 
     return jsonify({'message': '게시글이 작성되었습니다.'})
 
+
+#댓글 불러오기
+@app.route('/flask/comments/<int:post_id>', methods=['GET'])
+def get_comments(post_id):
+    # Filter comments based on the post_id
+     
+    c_numb = post_id 
+    with mysql.cursor() as cursor:
+        cursor.execute("SELECT  C_numb, answer, TIME, B_numb, comments.email, member.name FROM comments JOIN member ON comments.email=member.email WHERE B_numb=%s", (c_numb,))
+      
+
+        comments = cursor.fetchall()
+
+    return jsonify(comments)
+
+
+#댓글 작성하기
+@app.route('/flask/comments/<int:post_id>', methods=['POST'])
+def post_comments(post_id):
+    # Filter comments based on the post_id
+    post_comments = post_id
+    return jsonify(post_comments)
+
 if __name__ == '__main__':
     app.run(debug=True, port=4000)

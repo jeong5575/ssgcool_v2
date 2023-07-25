@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Layout from '../../../hoc/Layout';
 import Comment from './Comment';
 import axios from 'axios';
-
+import { Card } from 'antd';
 const PostDetailPage = ({ }) => {
     const post = useSelector((state) => state.post.selectedPost);
     const [comments, setComments] = useState([]);
@@ -34,12 +34,20 @@ const PostDetailPage = ({ }) => {
     
      {/* Display comments */}
      <div>
-        <h2>댓글</h2>
+     <h2>개의 답변이 있어요</h2>
         {comments.map((comment) => (
-          <Comment key={comment.commentId} comment={comment} />
+          <Card key={comment.commentId} style={{ marginBottom: '16px' }}>
+            <Comment comment={comment} />
+          </Card>
         ))}
       </div>
-
+      {/* 이미지 사이즈 조정 */}
+      <style>{`
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      `}</style>
     </Layout>
   );
 };

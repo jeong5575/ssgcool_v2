@@ -23,6 +23,7 @@ function App() {
       <Route path="/board" element={Auth1(Boardpage,true)} />
       <Route path="/postboard" element={Auth1(PostBoardPage,true)} />
       <Route path="/postdetail" element={Auth1(PostDetailPage,true)} />
+      
      
     </Routes>
     </div>

@@ -61,7 +61,7 @@ const navigate = useNavigate();
     console.log(body)
     dispatch(loginUser(body))
     .then(res=>{
-      if (res.payload.loginSuccess){navigate('/')}
+      if (res.payload.loginSuccess){navigate('/dashboard')}
       else {alert(res.payload.message)}
     })
   };

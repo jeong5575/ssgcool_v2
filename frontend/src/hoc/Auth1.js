@@ -17,12 +17,12 @@ export default function Auth1 (SpecificComponent, option, adminRoute = null) {
         if (option) navigate('/login');
 
          if (res.payload.isAuth) {
-           if (!option) navigate('/');
+           if (!option) navigate('/dashboard');
         // 로그인안한 상태로 로그인 들어갈때
         else {
-             if (adminRoute && !res.payload.isAdmin) navigate('/');
+             if (adminRoute && !res.payload.isAdmin) navigate('/dashboard');
            // 로그인 상태로 
-             else if (option === false) navigate('/');
+             else if (option === false) navigate('/dashboard');
            }
        }
       });

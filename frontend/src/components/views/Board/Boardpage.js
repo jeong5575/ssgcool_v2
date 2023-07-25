@@ -25,7 +25,12 @@ const PostItem = styled.div`
   border-bottom: 1px solid #ccc;
   border-radius: 4px;
   padding: 10px;
-  margin-bottom: 10px;
+  margin: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: 	#FaFAFA;
+    border-color: #aaa;
+  }
 `;
 
 const SearchBar = styled(Input)`
@@ -74,7 +79,7 @@ const Boardpage = () => {
 
   const dispatch = useDispatch();
 
-  
+
 const removeImageTags = (htmlContent) => {
   // Use a regular expression to remove image tags from the HTML content
   const withoutImages = htmlContent.replace(/<img\b[^>]*>/gi, '');
@@ -184,8 +189,18 @@ const removeImageTags = (htmlContent) => {
                    <h3>{post.title}</h3>
                    {/*이미지 제거후 보여주기 */}
                    <PostContent dangerouslySetInnerHTML={{ __html:removeImageTags(post.content) }}/>
-                   <p>작성자: {post.email}</p>
-                   <p>작성시간: {post.time}</p>
+                   <p>작성자: {post.email}</p> 
+                   {post.time && (
+      <p>작성시간: {new Date(post.time).toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+       
+      })}</p>
+    )}
+                    
                  </PostItem>
        
         ))}
