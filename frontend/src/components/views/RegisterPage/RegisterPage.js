@@ -54,6 +54,7 @@ export default function RegisterPage(props) {
   };
   
   const onPasswordHandler = (e) => {
+    console.log(e.currentTarget.value);
     setPassword(e.currentTarget.value);
   };
   
@@ -63,18 +64,24 @@ export default function RegisterPage(props) {
   };
   
   const onConfirmPasswordHandler = (e) => {
+    console.log(e.currentTarget.value)
     setConfirmPassword(e.currentTarget.value);
   };
   
   const onSubmitHandler = (e) => {
     
     console.log('Received values of form:', e);
-  if(Password !== ConfirmPassword ){
+    console.log(e.email);
+    console.log(e.nickname);
+    console.log(e.confirmpassword)
+    setPassword(e.password);
+    setPassword(e.confirmpassword);
+  if(e.password !== ConfirmPassword ){
    return alert("비밀번호가 일치하지 않습니다.")
   }
   
-    let body = {email : Email,password:Password,name:Name}
-  
+    let body = {email : e.email,password:e.password,name:e.nickname}
+   console.log (body)
     dispatch(registerUser(body))
     .then(res=>{
       if (res.payload.success){navigate('/login')}

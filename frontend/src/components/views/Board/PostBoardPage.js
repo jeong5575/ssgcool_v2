@@ -27,18 +27,28 @@ const Container = styled.div`
 const PostBoardPage = (props) => {
   const user = useSelector((state) => state.user.register);
 
-  console.log(props)
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
-  const [boardType, setboardType] =  useState('');
+  const [boardType, setboardType] =  useState('질문');
   // Define the quillRef using the useRef hook
   const QuillRef = useRef(null);
 
-  
   const handleButtonClick = (type) => {
-    setboardType(type);
+    switch (type) {
+      case 'QnA':
+        setboardType('질문');
+        break;
+      case 'free':
+        setboardType('자유게시판');
+        break;
+      case 'Study':
+        setboardType('스터디모집');
+        break;
+      default:
+        // Set a default value if 'type' doesn't match any case
+        setboardType('질문');
+    }
   };
-
   const imageHandler = async () => {
     
     const input = document.createElement("input");

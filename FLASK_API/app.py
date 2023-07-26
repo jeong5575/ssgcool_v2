@@ -28,7 +28,7 @@ def get_posts():
 
     with mysql.cursor() as cursor:
         if boardtype:  # boardtype이 주어진 경우 해당 유형에 맞는 게시글만 필터링
-            cursor.execute("SELECT * FROM board WHERE board_type=%s", (boardtype,))
+            cursor.execute("SELECT * FROM board WHERE board_type=%s ORDER BY B_numb DESC ", (boardtype,))
         else:  # boardtype이 주어지지 않은 경우 모든 게시글을 가져옴
             cursor.execute("SELECT * FROM board")
 
