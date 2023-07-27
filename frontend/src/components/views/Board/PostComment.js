@@ -101,11 +101,8 @@ const PostCommentPage = (props) => {
     }
      console.log(selectedPost)
     const variables = {
-      content: content,
-      userID: user._id,
-      title: title,
+      answer: content,
       email: user.email,
-      boardType: boardType,
       boardNumber: selectedPost.B_numb
     };
     console.log(variables)
@@ -117,7 +114,7 @@ const PostCommentPage = (props) => {
 
           setTimeout(() => {
             props.history.push('/board');
-          }, 2000);
+          }, 1000);
               }
       )
       .catch((error) => {

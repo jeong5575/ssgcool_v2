@@ -54,7 +54,19 @@ def create_post():
     return jsonify({'message': '게시글이 작성되었습니다.'})
 
 
-#댓글 불러오기
+# 게시글 삭제
+@app.route('/flask/deletePost', methods=['POST'])
+def delete_post():
+    data = request.get_json()
+    B_numb = data['B_numb']
+   
+    with mysql.cursor() as cursor:
+        cursor.execute("DELETE FROM board2 WHERE B_numb = %s", (B_numb,))
+        mysql.commit()
+
+    return jsonify({'message': '게시글이 삭제되었습니다.'})
+
+#답글 불러오기
 @app.route('/flask/comments/<int:post_id>', methods=['GET'])
 def get_comments(post_id):
     # Filter comments based on the post_id
@@ -69,7 +81,7 @@ def get_comments(post_id):
     return jsonify(comments)
 
 
-#댓글 작성하기
+#답글 작성하기
 @app.route('/flask/createComments', methods=['POST'])
 def post_comments():
     # Filter comments based on the post_id
@@ -84,6 +96,19 @@ def post_comments():
                        (time, answer,B_numb, email))
         mysql.commit()
     return jsonify({'message': '댓글이 작성되었습니다.'})
+
+
+# 답글 삭제
+@app.route('/flask/deleteComment', methods=['POST'])
+def delete_comments():
+    data = request.get_json()
+    C_numb = data['C_numb']
+   
+    with mysql.cursor() as cursor:
+        cursor.execute("DELETE FROM comments2 WHERE C_numb = %s", (C_numb,))
+        mysql.commit()
+
+    return jsonify({'message': '답글이 삭제되었습니다.'})
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0', port=4000)

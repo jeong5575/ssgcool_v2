@@ -10,7 +10,7 @@ import DashBoardPage from './components/views/DashBoardPage/DashBoardPage';
 import Boardpage from './components/views/Board/Boardpage';
 import PostBoardPage from './components/views/Board/PostBoardPage';
 import PostDetailPage from './components/views/Board/PostDetailPage';
-
+import Profilepage from './components/views/Board/Profilepage';
 function App() {
   return (
     <Router>
@@ -24,6 +24,7 @@ function App() {
       <Route path="/postboard" element={Auth1(PostBoardPage,true)} />
       <Route path="/postdetail" element={Auth1(PostDetailPage,true)} />
       
+      <Route path="/profile" element={Auth1(Profilepage,true)} />
      
     </Routes>
     </div>

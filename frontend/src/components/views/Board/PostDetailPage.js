@@ -10,7 +10,7 @@ import { Typography, Button, Form, message, Input } from 'antd';
 // Import the required language packs
 import { styled } from 'styled-components';
 import AWS from 'aws-sdk';
-
+import { Navigate, useNavigate} from 'react-router-dom'
 
 const PostDetailPage = (props) => {
 
@@ -123,7 +123,44 @@ const [title, setTitle] = useState('');
 const [boardType, setboardType] =  useState('질문');
 // Define the quillRef using the useRef hook
 const QuillRef = useRef(null);
+const navigate = useNavigate();
 
+const deletePost = async () => {
+  const variables = {
+    answer: content,
+    userID: user._id,
+    title: title,
+    email: user.email,
+    boardType: boardType,
+    B_numb: selectedPost.B_numb
+  };
+  console.log(variables)
+  axios
+  .post('/flask/deletePost', variables)
+  .then(() => {
+  
+      setContent(''); // Clear the editor content after successful submission
+
+      setTimeout(() => { message.success('게시글 삭제 완료');
+      navigate('/board');
+      }, 1000);
+          }
+  )
+  .catch((error) => {
+    message.error('An error occurred while creating the comment.');
+    console.error(error);
+  });
+};
+
+const updatePost = async () => {
+  try {
+    const response = await axios.get(`/flask/updatePost`);
+    setComments(response.data);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
     const post = useSelector((state) => state.post.selectedPost);
     const [comments, setComments] = useState([]);
@@ -159,8 +196,10 @@ const QuillRef = useRef(null);
     )}</p>
       <div style={{ borderBottom: '1px solid #ccc', marginBottom: '30px' }}></div>
       <div dangerouslySetInnerHTML={{ __html: post.content }} />
-      <p>작성자: {post.email}</p>
-      
+      <p>작성자: {post.email}</p><div>
+      {/* {post.email === user.email && <Button onClick={updatePost}>수정하기</Button>} */}
+      {post.email === user.email && <Button onClick={deletePost}>삭제하기</Button>}
+    </div>
       {/* Add any other details you want to show on the detailed post page */}
     </div>
     
@@ -168,7 +207,7 @@ const QuillRef = useRef(null);
     
      <div>
 
-     <h2>{comments.length}개의 답변이 있어요  <Button>답글 달기</Button></h2>
+     <h2>{comments.length}개의 답변이 있어요 </h2>
      
 
 
@@ -191,7 +230,7 @@ const QuillRef = useRef(null);
       
          <div style={{ textAlign: 'center', margin: '2rem' }}>
            <Button size="large" htmlType="submit">
-            등록하기
+            답글 달기
            </Button>
          </div>
        </Form>
@@ -199,7 +238,7 @@ const QuillRef = useRef(null);
     
         {comments.map((comment) => (
           <div  key={comment.commentId} style={{  marginBottom: '10px',padding:'5px' ,border: '1px solid #ccc', borderRadius: '10px',boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.1)' }}>
-            <Comment comment={comment} /><Button style={{fontSize:"10px"}}>댓글 달기</Button>
+            <Comment comment={comment} /> 
           </div>
         ))}
       </div>

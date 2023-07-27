@@ -89,8 +89,8 @@ export default function Header() {
                </Col>
               <Col flex={1} style={{ fontSize:"11px" ,marginTop: '28px', marginBottom: '0px' }}>
               <Space wrap size={17} align="baseline">
-              <CustomButton type="link">교육 과정</CustomButton>
-              <CustomButton type="link">맛집 리뷰</CustomButton>
+              {/* <CustomButton type="link">교육 과정</CustomButton>
+              <CustomButton type="link">맛집 리뷰</CustomButton> */}
               <CustomButton type="link">
                 <a href="/board">커뮤니티</a>
               </CustomButton>

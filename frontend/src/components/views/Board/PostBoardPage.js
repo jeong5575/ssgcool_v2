@@ -173,7 +173,7 @@ const PostBoardPage = (props) => {
      
         <div style={{ textAlign: 'center', margin: '2rem' }}>
           <Button size="large" htmlType="submit">
-            Submit
+            등록하기
           </Button>
         </div>
       </Form>
