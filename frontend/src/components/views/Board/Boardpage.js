@@ -6,6 +6,7 @@ import Layout from '../../../hoc/Layout';
 import { Navigate, useNavigate} from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { selectPost } from '../../../_actions/post_action';
+import { EditOutlined ,QuestionOutlined } from '@ant-design/icons';
 
 const PostContent = styled.p`
   overflow: hidden;
@@ -35,16 +36,32 @@ const PostItem = styled.div`
 
 const SearchBar = styled(Input)`
   margin-bottom: 10px;
+  display: flex;
 `;
 
 const WriteButton = styled(Button)`
-  margin-bottom: 10px;
+  background-color: 	#696969;
+  margin-left: auto;
+  height: 40px; /* Set the height to increase the size of the button */
+  font-size: 16px; /* Set the font size to increase the text size */
+  margin-left: auto;
+  &:hover {
+    background-color: black !important; /* Keep the background color the same on hover */
+    color: white !important; /* Keep the text color the same on hover */
+  }
 `;
 
 const SearchButton = styled(Button)`
   margin-bottom: 10px;
   margin-left: 10px;
 `;
+
+
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+`;
+
 const BoardMenu = styled.div`
  display: flex;
   flex-direction: vertical;
@@ -160,7 +177,9 @@ const removeImageTags = (htmlContent) => {
   return (
     <Layout>
       <BoardWrapper>
+     
         <h1>게시판</h1>
+      
         <BoardMenu>
           {/* 추가: boardtype에 따른 선택 메뉴 */}
           <MenuItem selected={boardType === 'QnA'} onClick={() => handleBoardTypeSelect('QnA')}>
@@ -172,7 +191,12 @@ const removeImageTags = (htmlContent) => {
           <MenuItem selected={boardType === 'Study'} onClick={() => handleBoardTypeSelect('Study')}>
             스터디모집
           </MenuItem>
+          <WriteButton type="primary" onClick={handleWritePost}>
+          <EditOutlined /> 글쓰기
+        </WriteButton>
         </BoardMenu>
+        
+        <SearchContainer>
         <SearchBar
           placeholder="게시물 검색"
           value={searchTerm}
@@ -180,10 +204,8 @@ const removeImageTags = (htmlContent) => {
         />
         <SearchButton type="primary" onClick={handleSearch}>
           검색
-        </SearchButton>
-        <WriteButton type="primary" onClick={handleWritePost}>
-          글쓰기
-        </WriteButton>
+        </SearchButton></SearchContainer>
+     
         {currentPosts.map((post) => (
                    <PostItem key={post.B_numb} onClick={() => handlePostClick(post.B_numb)}>
                    <h3>{post.title}</h3>

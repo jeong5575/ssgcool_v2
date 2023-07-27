@@ -7,7 +7,6 @@ import axios from 'axios';
 import { styled } from 'styled-components';
 import { useSelector } from 'react-redux';
 import AWS from 'aws-sdk';
-import { useNavigate   } from 'react-router-dom';
 
 const accessKeyId = process.env.REACT_APP_ACCESSS_KEY_ID;
 const secretAccessKey = process.env.REACT_APP_SECRET_ACCESS_KEY;
@@ -25,22 +24,33 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const PostBoardPage = (props) => {
+const PostCommentPage = (props) => {
   const user = useSelector((state) => state.user.register);
+  const selectedPost = useSelector((state) => state.post.selectedPost);
 
-  console.log(props)
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
-  const [boardType, setboardType] =  useState('QnA');
+  const [boardType, setboardType] =  useState('질문');
+  const [boardNumber, setboardNumber] =  useState('');
   // Define the quillRef using the useRef hook
   const QuillRef = useRef(null);
 
-  
   const handleButtonClick = (type) => {
-    console.log(type);
-    setboardType(type);
+    switch (type) {
+      case 'QnA':
+        setboardType('질문');
+        break;
+      case 'free':
+        setboardType('자유게시판');
+        break;
+      case 'Study':
+        setboardType('스터디모집');
+        break;
+      default:
+        // Set a default value if 'type' doesn't match any case
+        setboardType('질문');
+    }
   };
-  const navigate = useNavigate();
   const imageHandler = async () => {
     
     const input = document.createElement("input");
@@ -89,31 +99,31 @@ const PostBoardPage = (props) => {
     if (user && !user.isAuth) {
       return alert('Please Log in first');
     }
-
+     console.log(selectedPost)
     const variables = {
       content: content,
       userID: user._id,
       title: title,
       email: user.email,
       boardType: boardType,
-      nickname: user.name
+      boardNumber: selectedPost.B_numb
     };
     console.log(variables)
     axios
-    .post('/flask/createPosts', variables)
-    .then(() => {
-        message.success('게시글 등록 완료!');
-        setContent(''); // Clear the editor content after successful submission
+      .post('/flask/createComments', variables)
+      .then(() => {
+      
+          setContent(''); // Clear the editor content after successful submission
 
-        setTimeout(() => {
-          navigate("/board")
-        }, 1000);
-            }
-    )
-    .catch((error) => {
-      message.error('An error occurred while creating the post.');
-      console.error(error);
-    });
+          setTimeout(() => {
+            props.history.push('/board');
+          }, 2000);
+              }
+      )
+      .catch((error) => {
+        message.error('An error occurred while creating the comment.');
+        console.error(error);
+      });
   };
   const modules = useMemo(
     () => ({
@@ -181,4 +191,4 @@ const PostBoardPage = (props) => {
   );
 };
 
-export default PostBoardPage;
+export default PostCommentPage;

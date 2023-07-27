@@ -28,9 +28,9 @@ def get_posts():
 
     with mysql.cursor() as cursor:
         if boardtype:  # boardtype이 주어진 경우 해당 유형에 맞는 게시글만 필터링
-            cursor.execute("SELECT * FROM board WHERE board_type=%s ORDER BY B_numb DESC ", (boardtype,))
+            cursor.execute("SELECT * FROM board2 WHERE board_type=%s ORDER BY B_numb DESC; ", (boardtype,))
         else:  # boardtype이 주어지지 않은 경우 모든 게시글을 가져옴
-            cursor.execute("SELECT * FROM board")
+            cursor.execute("SELECT * FROM board2")
 
         posts = cursor.fetchall()
 
@@ -47,7 +47,7 @@ def create_post():
     board_type = data['boardType']
     time = datetime.now()
     with mysql.cursor() as cursor:
-        cursor.execute("INSERT INTO board (board_type, time, title, content, email) VALUES (%s,%s, %s, %s, %s)",
+        cursor.execute("INSERT INTO board2 (board_type, time, title, content, email) VALUES (%s,%s, %s, %s, %s)",
                        (board_type,time, title, content, email))
         mysql.commit()
 
@@ -61,7 +61,7 @@ def get_comments(post_id):
      
     c_numb = post_id 
     with mysql.cursor() as cursor:
-        cursor.execute("SELECT  C_numb, answer, TIME, B_numb, comments.email, member.name FROM comments JOIN member ON comments.email=member.email WHERE B_numb=%s", (c_numb,))
+        cursor.execute("SELECT  C_numb, answer, TIME, B_numb, email FROM comments2 WHERE B_numb=%s", (c_numb,))
       
 
         comments = cursor.fetchall()
@@ -70,11 +70,20 @@ def get_comments(post_id):
 
 
 #댓글 작성하기
-@app.route('/flask/comments/<int:post_id>', methods=['POST'])
-def post_comments(post_id):
+@app.route('/flask/createComments', methods=['POST'])
+def post_comments():
     # Filter comments based on the post_id
-    post_comments = post_id
-    return jsonify(post_comments)
+   
+    data = request.get_json()
+    answer = data['answer']
+    email = data['email']   
+    B_numb = data['boardNumber']
+    time = datetime.now()
+    with mysql.cursor() as cursor:
+        cursor.execute("INSERT INTO comments2 ( time, answer, B_numb, email) VALUES (%s,%s, %s, %s)",
+                       (time, answer,B_numb, email))
+        mysql.commit()
+    return jsonify({'message': '댓글이 작성되었습니다.'})
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0', port=4000)

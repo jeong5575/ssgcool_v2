@@ -11,25 +11,25 @@ const PostItem = styled.div`
   border-bottom: 1px solid #ccc;
   border-radius: 4px;
   padding: 10px;
-  margin-bottom: 10px;
 `;
 
 
 const Comment = ({ comment }) => {
 
-  const commentTime = new Date(comment.time);
-  const formattedTime = commentTime.toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-   
-  });
+  
   return (
     <BoardWrapper><PostItem>
-        <p>작성자: {comment.name}</p>
-        <p>작성시간: {formattedTime}</p>   
+         {comment.email}
+        {comment.TIME && (
+      <span>   {new Date(comment.TIME).toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+       
+      })}{console.log(comment)}</span>
+    )}   
       <p>{comment.answer}</p>
     
       
