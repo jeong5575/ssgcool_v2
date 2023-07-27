@@ -147,7 +147,7 @@ const deletePost = async () => {
           }
   )
   .catch((error) => {
-    message.error('An error occurred while creating the comment.');
+    message.error('게시글 삭제중 오류가 발생하였습니다.');
     console.error(error);
   });
 };
