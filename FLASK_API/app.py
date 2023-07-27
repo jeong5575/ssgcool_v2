@@ -7,9 +7,9 @@ app = Flask(__name__)
 CORS(app)
 
 # MariaDB 설정
-app.config['HOST'] = '15.164.153.191'  # 데이터베이스 호스트
-app.config['USER'] = 'team2'  # 데이터베이스 사용자명
-app.config['PASSWORD'] = 'team2'  # 데이터베이스 암호
+app.config['HOST'] = 'database-1.cz2djirsoort.ap-northeast-1.rds.amazonaws.com'  # 데이터베이스 호스트
+app.config['USER'] = 'admin'  # 데이터베이스 사용자명
+app.config['PASSWORD'] = '123456789'  # 데이터베이스 암호
 app.config['DB'] = 'team2'  # 데이터베이스 이름
 app.config['CURSORCLASS'] = 'DictCursor'
 
@@ -20,6 +20,13 @@ mysql = pymysql.connect(
     db=app.config['DB'],
     cursorclass=pymysql.cursors.DictCursor
 )
+
+
+@app.route('/')
+def index():
+    # 현재 호스트 주소를 가져옴
+    server_ip = request.host.split(':')[0]
+    return jsonify({'server_ip': server_ip})
 
 # 게시글 목록 가져오기
 @app.route('/flask/posts', methods=['GET'])
