@@ -91,7 +91,7 @@ const Boardpage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchedPosts, setSearchedPosts] = useState([]);
   const [boardType, setBoardType] = useState('QnA'); // 추가: boardType 상태
-
+  const [flaskIP, setflaskIP] =useState('');
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -102,10 +102,19 @@ const removeImageTags = (htmlContent) => {
   const withoutImages = htmlContent.replace(/<img\b[^>]*>/gi, '');
   return withoutImages;
 };
-
+const getIp =() =>{
+axios
+.get('/flask/getip')
+.then((req) => {setflaskIP(req.data.server_ip)
+        }
+)
+.catch((error) => {
+  
+  console.error(error);
+});}
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(); getIp ();
   }, []);
 
   const handlePostClick = (postId) => {
@@ -116,6 +125,7 @@ const removeImageTags = (htmlContent) => {
       // Navigate to the detailed post page with the selected post data
       dispatch(selectPost(selectedPost));
       navigate('/postdetail'); 
+      
     }
   };
 
@@ -129,6 +139,7 @@ const removeImageTags = (htmlContent) => {
       });
       setPosts(response.data);
       setSearchedPosts(response.data);
+      getIp ();
     } catch (error) {
       console.error(error);
     }
@@ -158,16 +169,14 @@ const removeImageTags = (htmlContent) => {
    
       try {
         setBoardType(type); // 상태 변경
-        console.log('clicked', type); // 수정: type 출력
-    
         const response = await axios.get('/flask/posts', {
           params: {
             boardtype: type, // 선택한 boardtype을 요청 파라미터로 전달
           },
         });
-    
         setPosts(response.data);
         setSearchedPosts(response.data);
+        getIp ();
       } catch (error) {
         console.error(error);
       }
@@ -177,7 +186,7 @@ const removeImageTags = (htmlContent) => {
   return (
     <Layout>
       <BoardWrapper>
-     
+      <h1>Flask 서버 IP: {flaskIP}  </h1>
         <h1>게시판</h1>
       
         <BoardMenu>

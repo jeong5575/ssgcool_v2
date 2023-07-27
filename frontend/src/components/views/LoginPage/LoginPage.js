@@ -39,26 +39,22 @@ const navigate = useNavigate();
   const [Password, setPassword] = useState('');
 
   const onEmailHandler = (e) => {
-    console.log("sea"+(e.currentTarget.value))
     setEmail(e.currentTarget.value);
   };
 
   const onPasswordHandler = (e) => {
    
     setPassword(e.currentTarget.value);
-    console.log("set password"+(e.currentTarget.value))
   };
 
   const onSubmitHandler = (e) => {
     
     console.log('Received values of form:', e);
     console.log("로그인 요청 보냄")
-    console.log(e.email)
     setEmail(e.email)
     setPassword(e.password)
     let body = {email : e.email,password:e.password}
     
-    console.log(body)
     dispatch(loginUser(body))
     .then(res=>{
       if (res.payload.loginSuccess){navigate('/dashboard')}

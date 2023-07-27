@@ -22,7 +22,7 @@ mysql = pymysql.connect(
 )
 
 
-@app.route('/')
+@app.route('/flask/getip')
 def index():
     # 현재 호스트 주소를 가져옴
     server_ip = request.host.split(':')[0]

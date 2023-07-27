@@ -28,7 +28,6 @@ const Container = styled.div`
 const PostBoardPage = (props) => {
   const user = useSelector((state) => state.user.register);
 
-  console.log(props)
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [boardType, setboardType] =  useState('QnA');
@@ -37,7 +36,6 @@ const PostBoardPage = (props) => {
 
   
   const handleButtonClick = (type) => {
-    console.log(type);
     setboardType(type);
   };
   const navigate = useNavigate();

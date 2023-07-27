@@ -59,8 +59,6 @@ const imageHandler = async () => {
 
 
 const onSubmit = (event) => {
-  console.log("clicked");
-  console.log(content);
   if (user && !user.isAuth) {
     return alert('Please Log in first');
   }
@@ -72,7 +70,6 @@ const onSubmit = (event) => {
     boardType: boardType,
     boardNumber: selectedPost.B_numb
   };
-  console.log(variables)
   axios
   .post('/flask/createComments', variables)
   .then(() => {
@@ -134,7 +131,6 @@ const deletePost = async () => {
     boardType: boardType,
     B_numb: selectedPost.B_numb
   };
-  console.log(variables)
   axios
   .post('/flask/deletePost', variables)
   .then(() => {
